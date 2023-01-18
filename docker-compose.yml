@@ -1,0 +1,36 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - db_data:/var/lib/jwtmysqlDB
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: jwt
+      MYSQL_DATABASE: jwt
+      MYSQL_USER: jwt
+      MYSQL_PASSWORD: jwt
+    ports:
+      - "3389:3306"
+
+  tomcat:
+    image: 'tomcat:8.5'
+    restart: always
+    depends_on:
+      - db
+
+    volumes:
+      - ./target/spring-boot-security-jwt.war:/usr/local/tomcat/webapps/spring-boot-security-jwt.war
+    links:
+      - db
+    ports:
+      - '127.0.0.1:6960:8080'
+    environment:
+      MYSQL_ROOT_PASSWORD: jwt
+      MYSQL_DATABASE: jwt
+      MYSQL_USER: jwt
+      MYSQL_PASSWORD: jwt
+
+volumes:
+  tomcat_data:
+  db_data: { }
