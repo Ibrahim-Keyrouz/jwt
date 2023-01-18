@@ -2,6 +2,7 @@ package com.bob.spring.security.jwt.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -106,7 +107,7 @@ public class AuthController {
         switch (role) {
         case "admin":
           Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+              .orElseThrow(() -> new RuntimeException("Error: Role is not found."+ERole.ROLE_ADMIN));
           roles.add(adminRole);
 
           break;
@@ -147,9 +148,11 @@ public class AuthController {
   
   @PostMapping("/signout")
   public ResponseEntity<?> logoutUser() {
-    UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Long userId = userDetails.getId();
-    refreshTokenService.deleteByUserId(userId);
+
+
+    refreshTokenService.deleteByUserId( userRepository.findByUsername( SecurityContextHolder.getContext().getAuthentication().getName()).get().getId());
+
+
     return ResponseEntity.ok(new MessageResponse("Log out successful!"));
   }
 

@@ -11,7 +11,7 @@ services:
       MYSQL_USER: jwt
       MYSQL_PASSWORD: jwt
     ports:
-      - "3389:3306"
+      - "3344:3306"
 
   tomcat:
     image: 'tomcat:8.5'
